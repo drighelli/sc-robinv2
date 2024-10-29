@@ -1,28 +1,31 @@
-Package: BuildABiocWorkshop
-Title: Bioconductor or R Workshop Template and Github Actions
+Package: robinV2
+Title: robin V2
 Version: 2.0.1
 Authors@R: 
-    person(given = "Sean",
-           family = "Davis",
+    person(given = "Dario",
+           family = "Righelli",
            role = c("aut", "cre"),
-           email = "seandavi@gmail.com",
-           comment = c(ORCID = "0000-0002-8991-6458"))
+           email = "dario.righelli@gmail.com")
 Description: This package serves as a template for using github actions to 
-    prepare a Bioconductor Workshop package for use. In particular,
-    a pkgdown website and docker image are generated based on workflow 
-    settings. 
+    prepare additional resources for robin v2. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.0
 Depends: 
-    Biobase
+    Biobase,
+    dplyr,
+    Seurat,
+    robin,
+    igraph,
+    patchwork,
+    mclust
 Suggests: 
     knitr,
     rmarkdown,
     pkgdown
-URL: https://seandavi.github.io/BuildABiocWorkshop/
-BugReports: https://github.com/seandavi/BuildABiocWorkshop/issues/new/choose
+URL: https://drighelli.github.io/robinV2/
+BugReports: https://github.com/drighelli/sc-robinv2/issues/new/choose
 VignetteBuilder: knitr
-DockerImage: ghcr.io/seandavi/buildabiocworkshop:latest
+DockerImage: ghcr.io/drighelli/robinV2:latest

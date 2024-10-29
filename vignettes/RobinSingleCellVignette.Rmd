@@ -1,0 +1,170 @@
+---
+title: "RobinSingleCellVignette"
+author: "Valeria Policastro"
+date: "26/11/2021"
+output: 
+    html_document:
+        code_folding: hide
+        toc: true
+        toc_float: true
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include=FALSE}
+### SET GENERAL OPTIONS FOR ALL CODE CHUNKS!
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, cache=TRUE, warning=FALSE)
+```
+
+# Single cell RNAseq Analysis
+
+## Package loading 
+```{r}
+
+library(dplyr)
+library(Seurat)
+library(patchwork)
+library(mclust)
+
+```
+
+## Reading data 
+```{r}
+tabData <- readRDS("Subsemple1percentemptyDroplets_doublet_filtered_tabulamuris_mtx.rds")
+
+SingleCellData <- CreateSeuratObject(counts = tabData, project = "singleCell", min.cells = round(dim(tabData)[2]*5/100), min.features = 0)
+SingleCellData 
+```
+
+## Data normalization
+```{r}
+
+SingleCellData <- NormalizeData(SingleCellData, normalization.method = "LogNormalize", scale.factor = 10000)
+
+SingleCellData[["RNA"]]@data[1:5,1:5]
+
+
+```
+
+## Feature selection 
+```{r}
+
+SingleCellData <- FindVariableFeatures(object = SingleCellData, selection.method="vst", nfeatures = 2000)
+
+
+```
+
+## Scale the data 
+```{r}
+SingleCellData <- ScaleData(SingleCellData, do.center = TRUE, do.scale = TRUE)
+SingleCellData[["RNA"]]@scale.data[1:5,1:5]
+```
+
+
+## Linear dimension reduction
+```{r}
+
+SingleCellData <- RunPCA(SingleCellData, features = VariableFeatures(object = SingleCellData))
+```
+
+
+## Graph 
+```{r}
+
+SingleCellData <- FindNeighbors(SingleCellData, dims = 1:50) 
+
+SingleCellData@graphs$RNA_snn[1:5,1:5] # Adjacency matrix
+```
+
+
+# How to use Robin
+
+## Reading Graph
+```{r}
+library(robin)
+
+AdjSNN <- SingleCellData@graphs$RNA_snn
+graphSingleCell <- graph_from_adjacency_matrix(AdjSNN,mode="directed",weighted = TRUE,add.colnames = "NA",diag=FALSE)
+edge <- as_edgelist(graphSingleCell)
+graph <- igraph::graph_from_edgelist(edge, directed=FALSE)
+graph <- igraph::simplify(graph)
+graph
+
+```
+
+
+
+## Compare all algorithms vs Louvain
+We apply the compare procedure to see which is the algorithm that better fits our network.
+```{r}
+#Infomap
+ comp_I <- robinCompareFast(graph=graph, method1="louvain",
+                        method2="infomap", measure="vi")
+ 
+
+
+#Walktrap
+comp_W <- robinCompareFast(graph=graph, method1="louvain",
+                       method2="walktrap", measure="vi")
+
+
+
+
+#LabelProp
+comp_La <- robinCompareFast(graph=graph, method1="louvain",
+                        method2="labelProp", measure="vi")
+
+
+
+
+#Fastgreedy
+comp_F <- robinCompareFast(graph=graph, method1="louvain",
+                        method2="fastGreedy", measure="vi")
+
+
+###Plots:
+plot1 <- plotRobin(graph=graph, model1=comp_I$Mean1, model2=comp_I$Mean2, legend=c("louvain","infomap"))
+
+
+plot2 <- plotRobin(graph=graph, model1=comp_La$Mean1, model2=comp_La$Mean2, legend=c("louvain","labelProp"))
+
+cols <- c("model1" = "#00BFC4", "model2" = "#F8766D") 
+plot3 <- plotRobin(graph=graph, model1=comp_W$Mean1, model2=comp_W$Mean2)+ggplot2::scale_colour_manual(values = cols,breaks = c("model1", "model2"), labels=c("louvain", "walktrap"))
+
+
+plot4 <- plotRobin(graph=graph, model1=comp_F$Mean1, model2=comp_F$Mean2, legend=c("louvain", "fastGreedy"))
+
+
+
+
+
+
+PlotComparisonAllVsInfomap <- gridExtra::grid.arrange(plot1,plot2,plot3,plot4, ncol=2)
+
+
+```
+
+
+The lowest curve is the most stable algorithm. Louvain and Walktrap are the best algorithms in our example. 
+
+
+
+## Statistical significance of communities
+
+Due to the fact that Louvain is one of the best algorithm for our network we apply the robust procedure with the Louvain algorithm to see if the communities detected are statistically significant.
+
+```{r}
+graphRandom <- random(graph=graph)
+proc <-robinRobust(graph=graph, graphRandom=graphRandom, method="louvain",
+measure="vi",type="independent")
+
+plotRobin(graph=graph, model1=proc$Mean, model2=proc$MeanRandom, legend=c("real data", "null model"))
+
+
+
+robinFDATest(graph=graph, model1=proc$Mean, model2=proc$MeanRandom, legend=c("real data", "null model"))
+
+robinGPTest(model1=proc$Mean,model2=proc$MeanRandom)
+```
+
+The communities given by Louvain are statistically significant.

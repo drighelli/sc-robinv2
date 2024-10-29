@@ -14,15 +14,15 @@ build all the pieces necessary for a workshop.
 
 ## Quickstart
 
-- [ ] Create a repo from this template and rename it (do not fork the repository).
-  - [ ] Ensure that "Read and Write Permissions" is checked under [General > Workflow permissions](https://github.com/seandavi/BuildABiocWorkshop/settings/actions). 
+- [x] Create a repo from this template and rename it (do not fork the repository).
+  - [x] Ensure that "Read and Write Permissions" is checked under [General > Workflow permissions](https://github.com/seandavi/BuildABiocWorkshop/settings/actions). 
 - [ ] Edit `DESCRIPTION` file
-  - [ ] Change package name
-  - [ ] Change title and description
+  - [x] Change package name
+  - [x] Change title and description
   - [ ] Change authors
-  - [ ] Check dependencies
-  - [ ] Change DockerImage tag
-- [ ] Edit '_pkgdown.yml' (and `.github/workflows yaml file` as needed)
+  - [x] Check dependencies
+  - [x] Change DockerImage tag
+- [x] Edit '_pkgdown.yml' (and `.github/workflows yaml file` as needed)
 - [ ] Write a normal R package that can be installed
 - [ ] Include one or more vignettes that will constitute the workshop materials
 
