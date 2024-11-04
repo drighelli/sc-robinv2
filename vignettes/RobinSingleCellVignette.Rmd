@@ -30,7 +30,7 @@ library(mclust)
 
 ## Reading data 
 ```{r}
-tabData <- readRDS("https://github.com/drighelli/sc-robinv2/blob/devel/inst/Subsemple1percentemptyDroplets_doublet_filtered_tabulamuris_mtx.rds")
+tabData <- readRDS(url("https://github.com/drighelli/sc-robinv2/blob/devel/inst/Subsemple1percentemptyDroplets_doublet_filtered_tabulamuris_mtx.rds","rb"))
 
 SingleCellData <- CreateSeuratObject(counts = tabData, project = "singleCell", min.cells = round(dim(tabData)[2]*5/100), min.features = 0)
 SingleCellData 
