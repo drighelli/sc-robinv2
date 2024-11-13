@@ -40,13 +40,15 @@ jobs:
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
 
+      - name: Install LaTeX dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y texlive texlive-latex-extra texlive-fonts-recommended
+
       - name: Install and Check Package
         run: |
-          # Run shell commands directly without using Rscript
           R CMD build .
           R CMD INSTALL *.tar.gz
-          
-          # Run rcmdcheck as an R command using Rscript
           Rscript -e 'rcmdcheck::rcmdcheck(args = "--no-build-vignettes --no-manual", error_on = "warning", check_dir = "check")'
 
 
