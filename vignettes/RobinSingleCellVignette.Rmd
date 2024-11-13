@@ -34,7 +34,7 @@ library(mclust)
 
 ## Reading data 
 ```{r}
-datav2 <- system.file("extdata", "Subsemple1percentemptyDroplets_doublet_filtered_tabulamuris_mtx_old.rds", package = "scrobinv2")
+datav2 <- system.file("extdata", "Subsemple1percentemptyDroplets_doublet_filtered_tabulamuris_mtx.rds", package = "scrobinv2")
 tabData <- readRDS(datav2)
 
 SingleCellData <- CreateSeuratObject(counts = tabData, project = "singleCell", min.cells = round(dim(tabData)[2]*5/100), min.features = 0)
@@ -46,7 +46,7 @@ SingleCellData
 
 SingleCellData <- NormalizeData(SingleCellData, normalization.method = "LogNormalize", scale.factor = 10000)
 
-SingleCellData[["RNA"]]@data[1:5,1:5]
+SingleCellData[["RNA"]]@layers$counts[1:5,1:5]
 
 
 ```
@@ -62,7 +62,7 @@ SingleCellData <- FindVariableFeatures(object = SingleCellData, selection.method
 ## Scale the data 
 ```{r}
 SingleCellData <- ScaleData(SingleCellData, do.center = TRUE, do.scale = TRUE)
-SingleCellData[["RNA"]]@scale.data[1:5,1:5]
+SingleCellData[["RNA"]]@layers$scale.data[1:5,1:5]
 ```
 
 
