@@ -1,5 +1,5 @@
-Package: robinV2
-Title: robin V2
+Package: scrobinv2
+Title: sc robin V2
 Version: 2.0.1
 Authors@R: 
     person(given = "Dario",
@@ -7,7 +7,7 @@ Authors@R:
            role = c("aut", "cre"),
            email = "dario.righelli@gmail.com")
 Description: This package serves as a template for using github actions to 
-    prepare additional resources for robin v2. 
+    prepare additional resources for sc robin v2. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -25,7 +25,7 @@ Suggests:
     knitr,
     rmarkdown,
     pkgdown
-URL: https://drighelli.github.io/robinV2/
-BugReports: https://github.com/drighelli/sc-robinv2/issues/new/choose
+URL: https://drighelli.github.io/scrobinv2/
+BugReports: https://github.com/drighelli/scrobinv2/issues/new/choose
 VignetteBuilder: knitr
-DockerImage: ghcr.io/drighelli/robinV2:latest
+DockerImage: ghcr.io/drighelli/scrobinv2:latest
