@@ -42,10 +42,13 @@ jobs:
 
       - name: Install and Check Package
         run: |
+          # Run shell commands directly without using Rscript
           R CMD build .
           R CMD INSTALL *.tar.gz
-          rcmdcheck::rcmdcheck(args = "--no-build-vignettes --no-manual", error_on = "warning", check_dir = "check")
-        shell: Rscript {0}
+          
+          # Run rcmdcheck as an R command using Rscript
+          Rscript -e 'rcmdcheck::rcmdcheck(args = "--no-build-vignettes --no-manual", error_on = "warning", check_dir = "check")'
+
 
       - name: Build pkgdown Documentation
         run: |
