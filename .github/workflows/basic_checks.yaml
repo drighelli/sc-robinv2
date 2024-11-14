@@ -49,7 +49,7 @@ jobs:
         run: |
           R CMD build .
           R CMD INSTALL *.tar.gz
-          Rscript -e 'rcmdcheck::rcmdcheck(args = "--no-build-vignettes --no-manual", error_on = "warning", check_dir = "check")'
+          Rscript -e 'rcmdcheck::rcmdcheck(args = "--no-build-vignettes --no-manual", error_on = "error", check_dir = "check")'
 
 
       - name: Build pkgdown Documentation
